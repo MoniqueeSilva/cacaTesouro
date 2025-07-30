@@ -1,39 +1,69 @@
-// A classe controla os movimentos do jogador no jogo
+import java.util.HashSet;
+import java.util.Set;
 
 public class Jogador {
-    public int vertical = 0;
-    public int horizontal = 0;
-    public int pontos = 0;
-    public boolean[][] visitado = new boolean[6][6]; // Passou ou não, valor padão: false
+    private int vertical;
+    private int horizontal;
+    private int pontos;
+    private Set<String> visitados; //Registrar as posições visitadas
 
     public Jogador() {
-        visitado[0][0] = true; // Primeira casa que o jogador está
+        this.vertical = 0;
+        this.horizontal = 0;
+        this.pontos = 0;
+        this.visitados = new HashSet<>();
+        registrarVisita(0, 0);
+    }
+
+    //Get: acessar
+    public int getVertical() {
+        return vertical;
+    }
+    public int getHorizontal() {
+        return horizontal;
+    }
+    public int getPontos() {
+        return pontos;
+    }
+
+    public boolean jaVisitado(int v, int h) { //Já passou
+        return visitados.contains(v + "," + h);
+    }
+    public void registrarVisita(int v, int h) { //Visitada
+        visitados.add(v + "," + h);
+    }
+
+    public void addPontos(int p) {
+        pontos += p;
     }
 
     public boolean mover(char direcao) {
-        int novaVertical = vertical;         // Nova posição temporária
-        int novaHorizontal = horizontal;     // Nova posição temporária
+    int novoV = vertical;
+    int novoH = horizontal;
 
-        if (direcao == 'W') novaVertical--;  // cima
-        if (direcao == 'S') novaVertical++;  // baixo
-        if (direcao == 'A') novaHorizontal--; // esquerda
-        if (direcao == 'D') novaHorizontal++; // direita 
-
-        if (novaVertical < 0 || novaVertical >= 6 || novaHorizontal < 0 || novaHorizontal >= 6) {
-            return false; // Movimento inválido se a posição sair do tabuleiro
-        }
-
-        if (visitado[novaVertical][novaHorizontal]) {
-            return false;// inválido se já foi visitada
-        }
-
-        vertical = novaVertical; // Atualiza posição 
-        horizontal = novaHorizontal; // Atualiza posição
-        visitado[vertical][horizontal] = true; // Visitada
-        return true; // Movimento válido
+    switch (direcao) {
+        case 'W': novoV--; //Cima
+            break;
+        case 'S': novoV++; //Baixo
+            break;
+        case 'A': novoH--; //Esquerda
+            break;
+        case 'D': novoH++; //Direita
+            break;
+        default:
+            System.out.println("Direção inválida!");
+            return false;
     }
 
-    public boolean foiVisitado(int v, int h) {
-        return visitado[v][h]; // Casa que já foi visitada
+    if (novoV < 0 || novoV >= 6 || novoH < 0 || novoH >= 6) {
+        System.out.println("Movimento fora do tabuleiro!");
+        return false;
     }
+
+    //Atualiza posição
+    vertical = novoV;
+    horizontal = novoH;
+    return true;
+    }
+
 }
